@@ -14,15 +14,9 @@ int main(int argc, char *argv[])
 	int i, j, flag;
 	stack_t *stack = NULL;
 
-	if (argc != 2)
-	{
-		error_usage();
-	}
+	(argc != 2) ? error_usage() : 0;
 	file = fopen(argv[1], "r");
-	if (file == NULL)
-	{
-		error_file_open(argv[1]);
-	}
+	(file == NULL) ? error_file_open(argv[1]) : 0;
 	instruction_t opcodes[] = {
 		{"pall", pall},
 		{"pint", pint},
