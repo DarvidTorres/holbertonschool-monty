@@ -1,21 +1,9 @@
 #ifndef MONTY_H
 #define MONTY_H
-
-/* LIBRARIES */
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <ctype.h>
 #include <string.h>
-
-/* GLOBAL VARS */
-
-char *buff;
-
-/* STRUCTURES */
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -26,7 +14,6 @@ char *buff;
  * Description: doubly linked list node structure
  * for stack, queues, LIFO, FIFO
  */
-
 typedef struct stack_s
 {
 	int n;
@@ -45,30 +32,27 @@ typedef struct stack_s
 typedef struct instruction_s
 {
 	char *opcode;
-	void (*f)(stack_t **stack, unsigned int);
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/* PROTOTYPES */
+extern stack_t *stack;
 
-/* main functions */
-void handle(char *file);
-void (*check_opcodes(void))(stack_t **, unsigned int);
-
-/* aux functions*/
-void *_calloc(unsigned int nmemb, unsigned int size);
-char **_split(char *str, char *sep);
-int _atoi(char *str, unsigned int line_number);
-void free_stack(stack_t *head);
-
-/* handle functions */
-void push(stack_t **stack, unsigned int line_number);
+void push(stack_t **stack, int value);
+void pall(stack_t **stack, unsigned int line_number);
+void pint(stack_t **stack, unsigned int line_number);
 void pop(stack_t **stack, unsigned int line_number);
 void swap(stack_t **stack, unsigned int line_number);
 void add(stack_t **stack, unsigned int line_number);
-
-/* print functions */
-void pall(stack_t **stack, unsigned int line_number);
-void pint(stack_t **stack, unsigned int line_number);
 void nop(stack_t **stack, unsigned int line_number);
 
+void free_dlistint(stack_t *stack);
+int sum_dlistint(stack_t *stack);
+size_t dlistint_len(const stack_t *stack);
+int delete_dnodeint_at_index(stack_t **stack, unsigned int index);
+void invalid_inst(unsigned long line_number, const char *opcode,
+		FILE *file, char *line, stack_t *stack);
+void error_usage(void);
+void error_file_open(const char *filename);
+void push_integer(void);
+void print_push_error(unsigned long line_number, FILE *file, char *line);
 #endif
