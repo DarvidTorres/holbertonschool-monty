@@ -28,21 +28,42 @@ int main(int argc, char *argv[])
 	};
 	while (getline(&line, &len, file) != -1)
 	{
+		flag = 0;
 		line_number++;
 		opcode = strtok(line, " \t$\n");
-		if (!opcode || opcode[0] == '#') continue;
-		if (strcmp(opcode, "push") == 0) {
+		if (opcode == NULL || opcode[0] == '#') continue;
+		if (strcmp(opcode, "push") == 0)
+		{
 			value = strtok(NULL, " $\n");
-			if (!value || (value[0] != '-' && !isdigit(value[0]))) print_push_error(line_number, file, line);
-			push(&stack, atoi(value));
-		} else {
-			int j;
-			for (j = 0; opcodes[j].opcode && strcmp(opcode, opcodes[j].opcode) != 0; j++);
-			if (!opcodes[j].opcode) invalid_inst(line_number, opcode, file, line, stack);
-			else opcodes[j].f(&stack, line_number);
+			if (value == NULL)
+			{
+				print_push_error(line_number, file, line);
+			}
+			for (i = 0; value[i] != '\0'; i++)
+			{
+				if  (!isdigit(value[i]) && value[i] != '-')
+				{
+					print_push_error(line_number, file, line);
+				}
+			}
+		push(&stack, atoi(value));
+		flag = 1;
 		}
-		free(line);
-		line = NULL;
+		if (flag == 0)
+		{
+			for (j = 0; opcodes[j].opcode != NULL; j++)
+			{
+				if (strcmp(opcode, opcodes[j].opcode) == 0)
+				{
+					opcodes[j].f(&stack, line_number);
+					break;
+				}
+			}
+		}
+		if (j == 6)
+			invalid_inst(line_number, opcode, file, line, stack);
+	free(line);
+	line = NULL;
 	}
 	free_dlistint(stack);
 	free(line);
