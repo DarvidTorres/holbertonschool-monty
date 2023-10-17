@@ -6,18 +6,28 @@
  * @argv: Argument values
  * Return: 0 on success, 1 on failure
  */
-int main(int argc, char *argv[]) {
+
+int main(int argc, char *argv[])
+{
+	char *opcode, *value, *line = NULL;
+	size_t line_number = 0, len = 0;
+	int i, j, flag;
+	stack_t *stack = NULL;
+
 	if (argc != 2) error_usage();
 	FILE *file = fopen(argv[1], "r");
 	if (!file) error_file_open(argv[1]);
-
-	char *line = NULL, *opcode, *value;
-	size_t line_number = 0, len = 0;
-	stack_t *stack = NULL;
-
-	instruction_t opcodes[] = {{"pall", pall}, {"pint", pint}, {"pop", pop}, {"swap", swap}, {"add", add}, {"nop", nop}, {NULL, NULL}};
-
-	while (getline(&line, &len, file) != -1) {
+	instruction_t opcodes[] = {
+		{"pall", pall},
+		{"pint", pint},
+		{"pop", pop},
+		{"swap", swap},
+		{"add", add},
+		{"nop", nop},
+		{NULL, NULL},
+	};
+	while (getline(&line, &len, file) != -1)
+	{
 		line_number++;
 		opcode = strtok(line, " \t$\n");
 		if (!opcode || opcode[0] == '#') continue;
@@ -37,9 +47,8 @@ int main(int argc, char *argv[]) {
 	free_dlistint(stack);
 	free(line);
 	fclose(file);
-	return 0;
+	return (0);
 }
-
 
 /**
  * push - Pushes an element onto the stack
